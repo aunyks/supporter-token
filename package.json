@@ -1,0 +1,45 @@
+{
+  "name": "token-factory",
+  "version": "0.0.0",
+  "description": "Mint as many fungible and non-fungible tokens as you'd like, all from the same contract.",
+  "scripts": {
+    "test": "hardhat test",
+    "prettier": "prettier --write .",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "token",
+    "nft",
+    "fungible",
+    "creator"
+  ],
+  "author": "Gerald Nash (https://aunyks.com) <me@aunyks.com> |aunyks.eth|",
+  "license": "GPLv3",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.4.5",
+    "hardhat": "^2.6.1",
+    "husky": "^7.0.1",
+    "prettier": "^2.3.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier"
+    }
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "useTabs": false,
+    "arrowParens": "avoid",
+    "semi": false,
+    "singleQuote": true,
+    "quoteProps": "as-needed",
+    "bracketSpacing": true
+  }
+}
