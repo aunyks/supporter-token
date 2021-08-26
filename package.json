@@ -4,6 +4,7 @@
   "description": "Mint as many fungible and non-fungible tokens as you'd like, all from the same contract.",
   "scripts": {
     "test": "hardhat test",
+    "console": "hardhat console",
     "prettier": "prettier --write .",
     "prepare": "husky install"
   },
@@ -41,5 +42,8 @@
     "singleQuote": true,
     "quoteProps": "as-needed",
     "bracketSpacing": true
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.0"
   }
 }

@@ -8,8 +8,10 @@ TBD, but trust me!
 
 ## What is it, really?
 
-A Token Factory is a contract that extends the ERC-1155 standard to be more creator-friendly.
+A Token Factory is a contract that extends the ERC-1155 standard to be more creator-friendly.  
 
+
+### LICENSE
 Token Factory
 Copyright (C) 2021 Gerald Nash
 
