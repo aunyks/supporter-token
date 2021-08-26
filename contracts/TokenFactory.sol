@@ -15,6 +15,7 @@ contract TokenFactory is ERC1155Supply, Ownable {
 
   function setUri(string memory newUri) public onlyOwner {
     _setURI(newUri);
+    emit URI(newUri, 0);
   }
 
   function mint(
