@@ -7,7 +7,6 @@ import '@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol';
 contract SupporterToken is ERC1155Supply, Ownable {
   mapping(uint256 => bool) internal hasExternalToken;
   mapping(uint256 => address) internal externalTokenAddress;
-  // TODO: Make this value change on transfer
   mapping(address => uint256) internal _aggregateBalance;
 
   constructor(string memory tokenUri) ERC1155(tokenUri) {

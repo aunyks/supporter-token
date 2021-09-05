@@ -8,7 +8,8 @@ describe('SupporterToken - Overriden Behaviors', () => {
   context('# Basic contract operations', () => {
     it('deploys when given one string as a constructor argument', async () => {
       const SupporterToken = await ethers.getContractFactory('SupporterToken')
-      await expect(SupporterToken.deploy(DEFAULT_METADATA_URI)).not.to.be.reverted
+      await expect(SupporterToken.deploy(DEFAULT_METADATA_URI)).not.to.be
+        .reverted
     })
 
     it('fails to deploy when there are no constructor arguments', async () => {
@@ -290,13 +291,28 @@ describe('SupporterToken - Overriden Behaviors', () => {
       it('fails when the sender has insufficient balance', async () => {
         await supporterToken.mint(deployerAccount.address, 1, 50, [])
 
-        await expect(supporterToken.safeTransferFrom(deployerAccount.address, receiverAccount.address, 1, 51, []))
-          .to.be.revertedWith('ERC1155: insufficient balance for transfer')
+        await expect(
+          supporterToken.safeTransferFrom(
+            deployerAccount.address,
+            receiverAccount.address,
+            1,
+            51,
+            []
+          )
+        ).to.be.revertedWith('ERC1155: insufficient balance for transfer')
       })
 
       it('emits a TransferSingle event with correct arguments', async () => {
         await supporterToken.mint(deployerAccount.address, 1, 50, [])
-        await expect(supporterToken.safeTransferFrom(deployerAccount.address, receiverAccount.address, 1, 25, []))
+        await expect(
+          supporterToken.safeTransferFrom(
+            deployerAccount.address,
+            receiverAccount.address,
+            1,
+            25,
+            []
+          )
+        )
           .to.emit(supporterToken, 'TransferSingle')
           .withArgs(
             deployerAccount.address,
@@ -311,7 +327,12 @@ describe('SupporterToken - Overriden Behaviors', () => {
 
     describe('- safeBatchTransferFrom', () => {
       it('successfully transfers the intended amounts and ids', async () => {
-        await supporterToken.mintBatch(deployerAccount.address, [0, 3], [1234, 1000], [])
+        await supporterToken.mintBatch(
+          deployerAccount.address,
+          [0, 3],
+          [1234, 1000],
+          []
+        )
         const deployerBalance0PreSend = await supporterToken.balanceOf(
           deployerAccount.address,
           0
@@ -370,16 +391,41 @@ describe('SupporterToken - Overriden Behaviors', () => {
       })
 
       it('fails when the sender has insufficient balance', async () => {
-        await supporterToken.mintBatch(deployerAccount.address, [0, 7], [124, 100], [])
+        await supporterToken.mintBatch(
+          deployerAccount.address,
+          [0, 7],
+          [124, 100],
+          []
+        )
 
-        await expect(supporterToken.safeBatchTransferFrom(deployerAccount.address, receiverAccount.address, [0, 7], [125, 0], []))
-          .to.be.revertedWith('ERC1155: insufficient balance for transfer')
+        await expect(
+          supporterToken.safeBatchTransferFrom(
+            deployerAccount.address,
+            receiverAccount.address,
+            [0, 7],
+            [125, 0],
+            []
+          )
+        ).to.be.revertedWith('ERC1155: insufficient balance for transfer')
       })
 
       it('emits a TransferBatch event with correct arguments', async () => {
-        await supporterToken.mintBatch(deployerAccount.address, [0, 7], [124, 100], [])
+        await supporterToken.mintBatch(
+          deployerAccount.address,
+          [0, 7],
+          [124, 100],
+          []
+        )
 
-        await expect(supporterToken.safeBatchTransferFrom(deployerAccount.address, receiverAccount.address, [0, 7], [124, 2], []))
+        await expect(
+          supporterToken.safeBatchTransferFrom(
+            deployerAccount.address,
+            receiverAccount.address,
+            [0, 7],
+            [124, 2],
+            []
+          )
+        )
           .to.emit(supporterToken, 'TransferBatch')
           .withArgs(
             deployerAccount.address,

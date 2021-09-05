@@ -41,8 +41,12 @@ describe('SupporterToken - Supporter Behaviors', () => {
 
   describe('- mintBatch', () => {
     it('correctly tracks aggregate balance during mintBatch', async () => {
-      await supporterToken
-        .mintBatch(receiverAccount.address, [0, 3, 7], [10, 20, 40], [])
+      await supporterToken.mintBatch(
+        receiverAccount.address,
+        [0, 3, 7],
+        [10, 20, 40],
+        []
+      )
       const receiverBalance = await supporterToken.aggregateBalanceOf(
         receiverAccount.address
       )
@@ -110,7 +114,12 @@ describe('SupporterToken - Supporter Behaviors', () => {
 
   describe('- safeBatchTransferFrom', () => {
     it('correctly tracks aggregate balance during safeBatchTransferFrom', async () => {
-      await supporterToken.mintBatch(deployerAccount.address, [0, 3], [1234, 1000], [])
+      await supporterToken.mintBatch(
+        deployerAccount.address,
+        [0, 3],
+        [1234, 1000],
+        []
+      )
       const deployerBalance0PreSend = await supporterToken.aggregateBalanceOf(
         deployerAccount.address
       )

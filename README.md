@@ -1,13 +1,14 @@
-# Supporter Token 
+# Supporter Token
 
-Your personal token. Supporter token lets you keep a record 
+Your personal token. Supporter token lets you keep a record
 of who your supporters are.
 
 ## Features
+
 - Mint as many NFTs as you like, from one contract.
 - Can be wrapped into ERC-20 tokens for use in DeFi or other applications.
-- `isSupporter()`: A function that you can call to determine whether some address is supporting you (ie owns one of your tokens).  
-- `aggregateBalanceOf()`: A function that provides the *aggregate* amount of tokens some account has. The more tokens they have, the more of a supporter they are!
+- `isSupporter()`: A function that you can call to determine whether some address is supporting you (ie owns one of your tokens).
+- `aggregateBalanceOf()`: A function that provides the _aggregate_ amount of tokens some account has. The more tokens they have, the more of a supporter they are!
 
 ## What is it, really?
 
