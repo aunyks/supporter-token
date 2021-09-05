@@ -267,10 +267,7 @@ describe('TokenFactory - Inherited Behaviors', () => {
         await expect(startUri).to.equal(startUri)
         await expect(tokenFactory.setUri(newUriString))
           .to.emit(tokenFactory, 'URI')
-          .withArgs(
-            newUriString,
-            0
-          )
+          .withArgs(newUriString, 0)
       })
     })
   })
