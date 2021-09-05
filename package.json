@@ -1,7 +1,7 @@
 {
-  "name": "token-factory",
-  "version": "0.0.0",
-  "description": "Mint as many fungible and non-fungible tokens as you'd like, all from the same contract.",
+  "name": "supporter-token",
+  "version": "0.0.1",
+  "description": "Know who your supporters are.",
   "scripts": {
     "test": "hardhat test",
     "console": "hardhat console",
