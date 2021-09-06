@@ -4,6 +4,8 @@ pragma solidity ^0.8.0;
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol';
 
+import '@openzeppelin/contracts/token/ERC1155/IERC1155.sol';
+
 contract SupporterToken is ERC1155Supply, Ownable {
   mapping(uint256 => bool) internal hasExternalToken;
   mapping(uint256 => address) internal externalTokenAddress;
@@ -13,6 +15,21 @@ contract SupporterToken is ERC1155Supply, Ownable {
     // It's STRONGLY recommended that you deploy
     // this contract with a multisig account to
     // minimize the risk of losing control of this contract
+  }
+
+  fallback() external payable {
+    payable(owner()).transfer(msg.value);
+  }
+
+  function supportsInterface(bytes4 interfaceId)
+    public
+    pure
+    override
+    returns (bool)
+  {
+    return
+      interfaceId == type(IERC1155).interfaceId ||
+      interfaceId == type(Ownable).interfaceId;
   }
 
   function _mint(
