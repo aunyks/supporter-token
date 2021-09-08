@@ -17,137 +17,84 @@ describe('Fungible Supporter Token', () => {
     )
     supporterToken = await SupporterToken.deploy('')
     await supporterToken.deployed()
+    const FungibleST = await ethers.getContractFactory(
+      'FungibleST',
+      deployerAccount
+    )
+    fungibleSt = await FungibleST.deploy(
+      'Fungible Standard Token',
+      'FST',
+      supporterToken.address,
+      3,
+      []
+    )
+    await fungibleSt.deployed()
   })
 
-  describe('- mint()', () => {
-    it('correctly tracks aggregate balance during mint', async () => {
-      await supporterToken.mint(receiverAccount.address, 1, 50, [])
-      await supporterToken.mint(receiverAccount.address, 2, 50, [])
-      const deployerBalance = await supporterToken.aggregateBalanceOf(
+  describe('- onERC1155BatchReceived()', () => {
+    it('mints fungible tokens on 1155 receive', async () => {
+      await supporterToken.mint(deployerAccount.address, 3, 50, [])
+      await supporterToken.safeTransferFrom(
+        deployerAccount.address,
+        fungibleSt.address,
+        3,
+        25,
+        []
+      )
+      const deployerFungibleBalance = await fungibleSt.balanceOf(
         deployerAccount.address
       )
-      const receiverBalance = await supporterToken.aggregateBalanceOf(
-        receiverAccount.address
+      const deployerNonFungibleBalance = await supporterToken.balanceOf(
+        deployerAccount.address,
+        3
       )
-      expect(deployerBalance).to.equal(
-        0,
+      expect(deployerFungibleBalance).to.equal(
+        25 * (await fungibleSt.decimals()),
         'Deployer address should have a 0 aggregate balance after mint'
       )
-      expect(receiverBalance).to.equal(
-        100,
+      expect(deployerNonFungibleBalance).to.equal(
+        25,
         'Receiver address should have a 100 aggregate balance after mint'
       )
     })
-  })
 
-  describe('- mintBatch', () => {
-    it('correctly tracks aggregate balance during mintBatch', async () => {
-      await supporterToken.mintBatch(
-        receiverAccount.address,
-        [0, 3, 7],
-        [10, 20, 40],
+    it('rejects receiving 1155 tokens with an incorrect token ID', async () => {
+      await supporterToken.mint(deployerAccount.address, 1, 50, [])
+      await expect(supporterToken.safeTransferFrom(
+        deployerAccount.address,
+        fungibleSt.address,
+        1,
+        25,
         []
-      )
-      const receiverBalance = await supporterToken.aggregateBalanceOf(
-        receiverAccount.address
-      )
-      expect(receiverBalance).to.equal(
-        70,
-        'Receiver address should have a 70 aggregate balance after mintBatch'
-      )
+      )).to.be.revertedWith('FungibleST: Token ID not supported')
     })
   })
 
-  describe('- burn()', () => {
-    it('correctly tracks aggregate balance during burn', async () => {
-      await supporterToken.mint(deployerAccount.address, 0, 5, [])
-      const deployerBalancePreBurn = await supporterToken.aggregateBalanceOf(
-        deployerAccount.address
-      )
-      expect(deployerBalancePreBurn).to.equal(
-        5,
-        'Address should have a 5 aggregate balance before burn'
-      )
-      await supporterToken.burn(deployerAccount.address, 0, 2)
-      const deployerBalancePostBurn = await supporterToken.aggregateBalanceOf(
-        deployerAccount.address
-      )
-      expect(deployerBalancePostBurn).to.equal(
-        3,
-        'Address should have a 3 aggregate balance after burn'
-      )
-    })
-  })
-
-  describe('- safeTransferFrom', () => {
-    it('correctly tracks aggregate balance during mint safeTransferFrom', async () => {
-      await supporterToken.mint(deployerAccount.address, 0, 5, [])
-      const deployerBalancePreSend = await supporterToken.aggregateBalanceOf(
-        deployerAccount.address
-      )
-      expect(deployerBalancePreSend).to.equal(
-        5,
-        'Deployer address should have an aggregate balance of 5 before safeTransferFrom'
-      )
+  describe('- unwrapTokens()', () => {
+    it('burns fungible tokens on call to unwrap', async () => {
+      await supporterToken.mint(deployerAccount.address, 3, 50, [])
       await supporterToken.safeTransferFrom(
         deployerAccount.address,
-        receiverAccount.address,
-        0,
-        2,
-        []
-      )
-      const deployerBalancePostSend = await supporterToken.aggregateBalanceOf(
-        deployerAccount.address
-      )
-      expect(deployerBalancePostSend).to.equal(
+        fungibleSt.address,
         3,
-        'Deployer address should have an aggregate balance of 3 after safeTransferFrom'
-      )
-      const receiverBalancePostSend = await supporterToken.aggregateBalanceOf(
-        receiverAccount.address
-      )
-      expect(receiverBalancePostSend).to.equal(
-        2,
-        'Receiver address should have an aggregate balance of 2 after safeTransferFrom'
-      )
-    })
-  })
-
-  describe('- safeBatchTransferFrom', () => {
-    it('correctly tracks aggregate balance during safeBatchTransferFrom', async () => {
-      await supporterToken.mintBatch(
-        deployerAccount.address,
-        [0, 3],
-        [1234, 1000],
+        25,
         []
       )
-      const deployerBalance0PreSend = await supporterToken.aggregateBalanceOf(
+      await fungibleSt.unwrapTokens(24)
+      const deployerFungibleBalance = await fungibleSt.balanceOf(
         deployerAccount.address
       )
-      expect(deployerBalance0PreSend).to.equal(
-        2234,
-        'Deployer address should have an aggregate balance of 2234 before safeBatchTransferFrom'
-      )
-      await supporterToken.safeBatchTransferFrom(
+      const deployerNonFungibleBalance = await supporterToken.balanceOf(
         deployerAccount.address,
-        receiverAccount.address,
-        [0, 3],
-        [1111, 777],
-        []
+        3
       )
-      const deployerBalance0PostSend = await supporterToken.aggregateBalanceOf(
-        deployerAccount.address
+      expect(deployerFungibleBalance).to.equal(
+        1 * (await fungibleSt.decimals()),
+        'Deployer address should have a 0 aggregate balance after mint'
       )
-      expect(deployerBalance0PostSend).to.equal(
-        346,
-        'Deployer address should have an aggregate balance of 123 for ID 0 after safeBatchTransferFrom'
-      )
-      const receiverBalance0PostSend = await supporterToken.aggregateBalanceOf(
-        receiverAccount.address
-      )
-      expect(receiverBalance0PostSend).to.equal(
-        1888,
-        'Receiver address should have an aggregate balance of 1111 for ID 0 after safeBatchTransferFrom'
+      expect(deployerNonFungibleBalance).to.equal(
+        49,
+        'Receiver address should have a 100 aggregate balance after mint'
       )
     })
   })
